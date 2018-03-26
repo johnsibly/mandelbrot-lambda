@@ -28,9 +28,15 @@
     
     function drawOnLoad() {
         var canvas = document.getElementById('canvas');
+        canvas.width = 1600;
+        canvas.height = 800;
+        canvas.style.width = "800px";
+        canvas.style.height = "400px";
+        var context = canvas.getContext('2d')
+        context.scale(2,2)
+
         var elemLeft = canvas.offsetLeft,
             elemTop = canvas.offsetTop,
-            context = canvas.getContext('2d'),
             elements = [];
 
         canvas.addEventListener('click', function(event) {
