@@ -2,14 +2,17 @@
 <html>
  <head>
   <meta charset="utf-8"/>
+  <!-- <script src='https://github.com/MikeMcl/big.js/blob/master/big.min.js'></script> -->
+  <script src='../big.js/big.js'></script>
   <script type="application/javascript">
     "use strict";
-    const max_iteration = 1000;
-    var scale = 1.0;
-    var centreX = -0.5;
-    var centreY = 0.0;
-    var startx = -2.5; 
-    var starty = -1.0; 
+
+    const max_iteration = 4096;
+    var scale = new Big(1.0);
+    var centreX = new Big(-0.5);
+    var centreY = new Big(0.0);
+    var startx = new Big(-2.5); 
+    var starty = new Big(-1.0); 
 
     function writeMessage(canvas, message) {
         var context = canvas.getContext('2d');
@@ -28,6 +31,11 @@
     
     function drawOnLoad() {
         var canvas = document.getElementById('canvas');
+        canvas.width = 1600;
+        canvas.height = 800;
+        canvas.style.width = "800px";
+        canvas.style.height = "400px";
+
         var elemLeft = canvas.offsetLeft,
             elemTop = canvas.offsetTop,
             context = canvas.getContext('2d'),
@@ -67,7 +75,7 @@
     }
 
     function draw() {
-        let pixelWidth = scale / 200;
+        let pixelWidth = scale.div(200);
         console.log('pixelWidth: ' + pixelWidth);
 
         if (canvas.getContext) {
@@ -103,16 +111,26 @@
                     let mapped = virtualToPixels(xp, yp, startx, starty);
                     
                     ctx.fillStyle = color;
-                    ctx.fillRect(mapped.mappedX, mapped.mappedY, mapped.mappedX+1, mapped.mappedY+1); 
+                    ctx.fillRect(mapped.mappedX, mapped.mappedY, 1, 1); 
                 } 
             } 
             console.log('opertaions: ' + operations);
         }
     }
 
+    function setPixel(imageData, x, y, r, g, b, a) {
+        index = (x + y * imageData.width) * 4;
+        imageData.data[index+0] = r;
+        imageData.data[index+1] = g;
+        imageData.data[index+2] = b;
+        imageData.data[index+3] = a;
+    }
+
     function pixelsToVirtual(x, y, startx, starty){
-        let vx = (x * scale / 200.0) + startx;
-        let vy = (y * scale / 200.0) + starty;
+        let bigx = new Big(x);
+        let bigy = new Big(y);
+        let vx = bigx.times(scale).div(200.0).plus(new Big(startx));
+        let vy = bigy.times(scale).div(200.0).plus(new Big(starty));
         return {vx, vy};
     }
 
