@@ -7,7 +7,8 @@
   <script type="application/javascript">
     "use strict";
 
-    const max_iteration = 4096;
+    // const max_iteration = 4096;
+    const max_iteration = 10;
     var scale = new Big(1.0);
     var centreX = new Big(-0.5);
     var centreY = new Big(0.0);
@@ -31,14 +32,15 @@
     
     function drawOnLoad() {
         var canvas = document.getElementById('canvas');
-        canvas.width = 1600;
-        canvas.height = 800;
-        canvas.style.width = "800px";
-        canvas.style.height = "400px";
+        canvas.width = 800;
+        canvas.height = 400;
+        //canvas.style.width = "800px";
+        //canvas.style.height = "400px";
+        var context = canvas.getContext('2d')
+    //    context.scale(2,2)
 
         var elemLeft = canvas.offsetLeft,
             elemTop = canvas.offsetTop,
-            context = canvas.getContext('2d'),
             elements = [];
 
         canvas.addEventListener('click', function(event) {
@@ -53,7 +55,7 @@
 
             centreX = virt.vx;
             centreY = virt.vy;
-            scale = scale/2;
+            scale = scale.div(2.0);
 
             console.log('centerX=' + centreX + ', centreY=' + centreY + ', scale=' + scale);
 
@@ -71,11 +73,13 @@
             writeMessage(canvas, message);
         }, false);
 
-        draw();
+        // allow OnLoad to complete
+        setTimeout(function(){ draw(); }, 10);
+        
     }
 
     function draw() {
-        let pixelWidth = scale.div(200);
+        let pixelWidth = scale.div(10); //scale.div(200);
         console.log('pixelWidth: ' + pixelWidth);
 
         if (canvas.getContext) {
@@ -83,30 +87,32 @@
             ctx.fillStyle = 'black';
             ctx.fillRect(0, 0, 800, 400);
 
-            startx = centreX-(2*scale);
-            let endx = (centreX+(2*scale));
-            starty = (centreY-scale);
-            let endy = (centreY+scale);
-            console.log(startx + ' ' + endx + ' ' + starty + ' ' + endy);
+            startx = centreX.minus(scale.times(2.0));
+            let endx = centreX.plus(scale.times(2.0));
+            starty = centreY.minus(scale);
+            let endy = centreY.plus(scale);
+            console.log(+startx + ' ' + +endx + ' ' + +starty + ' ' + +endy);
 
             let start = virtualToPixels(startx, starty, startx, starty);
             let end = virtualToPixels(endx, endy, startx, starty);
-            console.log('pix bounds: ' + start.mappedX + ' ' + start.mappedY + ' ' + end.mappedX + ' ' + end.mappedY);
+            console.log('pix bounds: ' + +start.mappedX + ' ' + +start.mappedY + ' ' + +end.mappedX + ' ' + +end.mappedY);
 
             let operations = 0;
-            for (let xp = startx; xp<endx; xp=xp+pixelWidth) {
-                for (let yp = starty; yp<endy; yp=yp+pixelWidth) {
-                    let x = 0.0;
-                    let y = 0.0;
+            for (let xp = startx; xp.lt(endx); xp=xp.plus(pixelWidth)) {
+                console.log(+xp);
+                for (let yp = starty; yp.lt(endy); yp=yp.plus(pixelWidth)) {
+                    let x = new Big(0.0);
+                    let y = new Big(0.0);
                     let iteration = 0;
-                    
-                    while ((x*x + y*y) < 4 && iteration < max_iteration) {
-                        let xtemp = x*x - y*y + xp;
-                        y = 2*x*y + yp;
+                    const big4 = new Big(4.0);
+                    while ((x.pow(2).plus(y.pow(2))).lt(big4) && iteration < max_iteration) {
+                        let xtemp = x.pow(2).minus(y.pow(2)).plus(xp);
+                        y = x.times(y).times(2.0).plus(yp);
                         x = xtemp;
                         iteration++;
                         operations++;
                     }
+                    
                     let color = getColour(iteration);
                     let mapped = virtualToPixels(xp, yp, startx, starty);
                     
@@ -135,8 +141,10 @@
     }
 
     function virtualToPixels(x, y, startx, starty){
-        let mappedX = (200.0/scale)*(x-startx);
-        let mappedY = (200.0/scale)*(y-starty);
+        let Big200 = new Big(200.0);
+
+        let mappedX = Big200.div(scale).times(x.minus(startx))    
+        let mappedY = Big200.div(scale).times(y.minus(starty))    
         return {mappedX, mappedY};
     }
 
