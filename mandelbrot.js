@@ -103,7 +103,7 @@ function draw() {
 
                 xhr.onload = function() {
                     if (xhr.status >= 200 && xhr.status < 300) {
-                        verticleSlice = JSON.parse(xhr.response.body);
+                        let verticleSlice = JSON.parse(xhr.response);
                         verticleSlice.forEach(x => {
                             ctx.fillStyle = verticleSlice.pop();
                             ctx.fillRect(mappedX, verticleSlice.length, 1, 1); 

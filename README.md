@@ -1,1 +1,2 @@
-# mandlebrot-lambda
+# mandelbrot-lambda
+
