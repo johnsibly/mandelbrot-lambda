@@ -1,13 +1,11 @@
-
-
-const max_iteration = 1;
+const max_iteration = 4096;
 
 exports.handler = (event, context, callback) => {
     console.log(event.headers);
     let xp = Number(event.headers['x-xp']);
     let starty = Number(event.headers['x-starty']);
     let endy = Number(event.headers['x-endy']);
-    let pixelWidth = Number(event.headers['x-pixelWidth']);
+    let pixelWidth = Number(event.headers['x-pixelwidth']);
     
     let verticleSlice = calculateVerticalSlice(xp, starty, endy, pixelWidth);
 

@@ -96,14 +96,14 @@ function draw() {
                 
                 xhr.setRequestHeader('Content-type', 'application/json');
                 xhr.setRequestHeader('Accept', 'application/json');
-                xhr.setRequestHeader('X-xp', xp);
-                xhr.setRequestHeader('X-starty', starty);
-                xhr.setRequestHeader('X-endy', endy);
-                xhr.setRequestHeader('X-pixelWidth', pixelWidth);
+                xhr.setRequestHeader('x-xp', xp);
+                xhr.setRequestHeader('x-starty', starty);
+                xhr.setRequestHeader('x-endy', endy);
+                xhr.setRequestHeader('x-pixelwidth', pixelWidth);
 
                 xhr.onload = function() {
                     if (xhr.status >= 200 && xhr.status < 300) {
-                        let verticleSlice = JSON.parse(xhr.response);
+                        let verticleSlice = JSON.parse(xhr.responseText);
                         verticleSlice.forEach(x => {
                             ctx.fillStyle = verticleSlice.pop();
                             ctx.fillRect(mappedX, verticleSlice.length, 1, 1); 
