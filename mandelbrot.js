@@ -104,10 +104,10 @@ function draw() {
                 xhr.onload = function() {
                     if (xhr.status >= 200 && xhr.status < 300) {
                         let verticleSlice = JSON.parse(xhr.responseText);
-                        verticleSlice.forEach(x => {
+                        for (let i = (verticleSlice.length - 1); i >= 0; i--) {
                             ctx.fillStyle = verticleSlice.pop();
-                            ctx.fillRect(mappedX, verticleSlice.length, 1, 1); 
-                        });
+                            ctx.fillRect(mappedX, i, 1, 1); 
+                        }
                     } else {
                         console.log('Error !');
                     }
