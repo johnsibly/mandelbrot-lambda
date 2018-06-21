@@ -1,0 +1,23 @@
+{
+  "name": "mandelbrot-lambda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "mandelbrot-lambda.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnsibly/mandlebrot-lambda.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnsibly/mandlebrot-lambda/issues"
+  },
+  "homepage": "https://github.com/johnsibly/mandlebrot-lambda#readme",
+  "keywords": [],
+  "dependencies": {
+    "xmlhttprequest": "^1.8.0"
+  }
+}
